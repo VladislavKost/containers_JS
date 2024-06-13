@@ -12,18 +12,22 @@ const PagesProvider = () => {
   const loadJWT = useCallback(async () => {
     try {
       const value = SecureStore.getItem("token");
-      console.log(value);
-      const jwt = JSON.parse(value);
-      authContext.setAuthState({
-        accessToken: jwt.accessToken || null,
-        refreshToken: jwt.refreshToken || null,
-        authenticated: jwt.accessToken !== null,
-      });
+      if (value) {
+        const jwt = JSON.parse(value);
+        authContext.setAuthState({
+          accessToken: jwt.accessToken || null,
+          refreshToken: jwt.refreshToken || null,
+          authenticated: jwt.accessToken !== null,
+        });
 
-      setStatus("success");
+        setStatus("success");
+      } else {
+        console.log("Пароль отсутствует");
+        setStatus("error");
+      }
     } catch (error) {
       setStatus("error");
-      console.log(`Keychain Error: ${error.message}`);
+      console.log(`SecureStore Error: ${error.message}`);
       authContext.setAuthState({
         accessToken: null,
         refreshToken: null,

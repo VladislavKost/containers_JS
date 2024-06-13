@@ -1,10 +1,13 @@
 import { View, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@rneui/themed";
 import { Input } from "@rneui/themed";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
+import * as SecureStore from "expo-secure-store";
+import { AxiosContext, AxiosProvider } from "../context/AxiosContext";
 const baseUrl = "http://192.168.0.11:8000";
 
 const SignUp = ({ navigation }) => {
@@ -14,18 +17,34 @@ const SignUp = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const authContext = useContext(AuthContext);
+  const { publicAxios } = AxiosProvider;
+
   const createUser = async () => {
-    console.log(username, email, password);
     setLoading(true);
     try {
-      const response = await axios.post(`${baseUrl}/api/v1/users/sign-up`, {
+      const response = await axios.post(`${baseUrl}/api/v1/users/signup`, {
         username,
         email,
         password,
       });
-      console.log(response)
-      if (response.status === 201) {
-        alert(` You have created: ${JSON.stringify(response.data)}`);
+      if (response.status >= 200 && response.status <= 299) {
+        const { access, refresh } = response.data;
+
+        authContext.setAuthState({
+          accessToken: access,
+          refreshToken: refresh,
+          authenticated: true,
+        });
+
+        await SecureStore.setItemAsync(
+          "token",
+          JSON.stringify({
+            accessToken: access,
+            refreshToken: refresh,
+          })
+        );
+
         setLoading(false);
         setUsername("");
         setEmail("");
@@ -34,7 +53,7 @@ const SignUp = ({ navigation }) => {
         throw new Error("An error has occurred");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       alert("An error has occurred");
       setLoading(false);
     }

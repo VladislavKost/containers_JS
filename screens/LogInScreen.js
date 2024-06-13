@@ -28,35 +28,30 @@ const LogIn = ({ navigation }) => {
         username,
         password,
       });
-      console.log("login response", response)
-      const { access, refresh } = response;
+      if (response.status >= 200 && response.status <= 299) {
+        const { access, refresh } = response.data;
 
-      authContext.setAuthState({
-        accessToken: access,
-        refreshToken: refresh,
-        authenticated: true,
-      });
-
-      await SecureStore.setItemAsync(
-        "token",
-        JSON.stringify({
+        authContext.setAuthState({
           accessToken: access,
           refreshToken: refresh,
-        })
-      );
+          authenticated: true,
+        });
 
-      setLoading(false);
-      setUsername("");
-      setPassword("");
+        await SecureStore.setItemAsync(
+          "token",
+          JSON.stringify({
+            accessToken: access,
+            refreshToken: refresh,
+          })
+        );
 
-      // if (response.status === 201) {
-      //   alert(` You have logined: ${JSON.stringify(response.data)}`);
-
-      // } else {
-      //   throw new Error("An error has occurred");
-      // }
+        setLoading(false);
+        setUsername("");
+        setPassword("");
+      } else {
+        throw new Error("An error has occurred");
+      }
     } catch (error) {
-      console.log(error)
       alert("An error has occurred");
       setLoading(false);
     }
