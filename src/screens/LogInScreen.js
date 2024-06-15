@@ -7,7 +7,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import * as SecureStore from "expo-secure-store";
-import { AxiosContext, AxiosProvider } from "../context/AxiosContext";
 
 const baseUrl = "http://192.168.0.11:8000";
 
@@ -19,12 +18,11 @@ const LogIn = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const authContext = useContext(AuthContext);
-  const { publicAxios } = AxiosProvider;
 
   const onLogin = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${baseUrl}/api/v1/token/`, {
+      const response = await axios.post(`${baseUrl}/api/v1/users/token/`, {
         username,
         password,
       });
@@ -60,7 +58,10 @@ const LogIn = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
       <Text style={{ textAlign: "center" }}>Login</Text>
-      <Input label="Username" onChangeText={(value) => setUsername(value)} />
+      <Input
+        label="Username or email"
+        onChangeText={(value) => setUsername(value)}
+      />
       <Input
         label="Password"
         secureTextEntry={hidePassword}

@@ -23,7 +23,7 @@ const SignUp = ({ navigation }) => {
   const createUser = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${baseUrl}/api/v1/users/signup`, {
+      const response = await axios.post(`${baseUrl}/api/v1/users/signup/`, {
         username,
         email,
         password,

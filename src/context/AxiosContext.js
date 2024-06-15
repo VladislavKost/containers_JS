@@ -41,7 +41,7 @@ const AxiosProvider = ({ children }) => {
     const options = {
       method: "POST",
       data,
-      url: "http://192.168.0.11:8000/api/v1/token/refresh/",
+      url: "http://192.168.0.11:8000/api/v1/users/token/refresh/",
     };
 
     return axios(options)
