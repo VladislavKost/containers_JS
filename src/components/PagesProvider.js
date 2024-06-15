@@ -1,9 +1,9 @@
-import MainContainer from "./navigation/MainContainer";
+import MainContainer from "../navigation/MainContainer";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { AuthContext } from "./context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import * as SecureStore from "expo-secure-store";
-import Spinner from "./components/Spinner";
-import GreetingContainer from "./navigation/GreetingsContainer";
+import Spinner from "../components/Spinner";
+import GreetingContainer from "../navigation/GreetingsContainer";
 
 const PagesProvider = () => {
   const authContext = useContext(AuthContext);
@@ -22,7 +22,6 @@ const PagesProvider = () => {
 
         setStatus("success");
       } else {
-        console.log("Пароль отсутствует");
         setStatus("error");
       }
     } catch (error) {

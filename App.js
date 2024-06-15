@@ -1,6 +1,6 @@
-import { AuthProvider } from "./context/AuthContext";
-import { AxiosProvider } from "./context/AxiosContext";
-import PagesProvider from "./PagesProvider";
+import { AuthProvider } from "./src/context/AuthContext";
+import { AxiosProvider } from "./src/context/AxiosContext";
+import PagesProvider from "./src/components/PagesProvider";
 
 export default function App() {
   return (
